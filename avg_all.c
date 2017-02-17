@@ -47,21 +47,13 @@ int main() {
 
   	// Gather all partial averages to the root process
   	float *sub_avgs = NULL;
-  	if (world_rank == 0) {
-  		sub_avgs = (float *)malloc(sizeof(float)*world_size);
-  	}
-  	MPI_Gather(&sub_avg,1, MPI_FLOAT, sub_avgs, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
+		sub_avgs = (float *)malloc(sizeof(float)*world_size);
+  	MPI_Allgather(&sub_avg,1, MPI_FLOAT, sub_avgs, 1, MPI_FLOAT, MPI_COMM_WORLD);
 
 
-  	//compute the total average
-  	if (world_rank == 0){
-  		float avg = compute_avg(sub_avgs,world_size);
-  		printf("Avg of all elements is %f\n", avg);
-
-  		// compute the average accross the original data for comparison
-  		float original_data_avg = compute_avg(rand_nums, num_elements_per_proc * world_size);
-  		printf("Avg computed across original data is %f\n", original_data_avg);
-  	}
+  	//compute the total average	
+		float avg = compute_avg(sub_avgs,world_size);
+		printf("Process %d: Avg of all elements is %f\n",world_rank ,avg);
 
   	//clean up
   	if (world_rank == 0) {
