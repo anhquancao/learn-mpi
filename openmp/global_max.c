@@ -32,8 +32,9 @@ int main()
             }
         }
         printf("Thread %d - max %d\n", tid, localMax);
-        #pragma omp critical(globalMax)
+        #pragma omp critical(abc)
         {
+            printf("Thread %d: local max: %d, global max: %d\n", tid, localMax, globalMax);
             if (globalMax < localMax){
                 globalMax = localMax;
             }
